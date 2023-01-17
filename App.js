@@ -1,11 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { FlatList, StatusBar, StyleSheet, View } from "react-native";
+import { useSharedValue } from "react-native-reanimated";
+import ListItems from "./components/ListItems";
+
+const data = new Array(50).fill(0).map((_, index) => ({ id: index }));
 
 export default function App() {
+  const vItems = useSharedValue([]);
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <StatusBar backgroundColor="#579BB1" />
+      <FlatList
+        contentContainerStyle={{ paddingVertical: 40 }}
+        data={data}
+        showsVerticalScrollIndicator={false}
+        onViewableItemsChanged={({ viewableItems }) => {
+          vItems.value = viewableItems;
+        }}
+        renderItem={({ item }) => {
+          return <ListItems item={item} vItems={vItems} />;
+        }}
+      />
     </View>
   );
 }
@@ -13,8 +28,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#579BB1",
   },
 });
